@@ -61,13 +61,12 @@ services:
     - .\Mysql8.x\:/etc/mysql/
 
   redis:
-    image: 'bitnami/redis:latest'
+    image: 'redis:5.0.7'
     environment:
       ALLOW_EMPTY_PASSWORD: "yes"
     ports:
     - 6379:6379
     volumes:
-    - .\Redis\Log:/var/log/redis/
-    - .\Redis\Data:/var/lib/redis/
-    - .\Redis\redis.conf:/opt/bitnami/redis/etc/redis.conf
+    - .\Redis\Data:/data
+    - .\Redis\redis.conf:/usr/local/etc/redis/redis.conf
     
