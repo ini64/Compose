@@ -1,0 +1,1 @@
+https://blog.markvincze.com/graceful-termination-in-kubernetes-with-asp-net-core/
