@@ -6,8 +6,8 @@ data:
   fluent.conf: |
     <source>
       @type tail
-      path /var/log/containers/app-deployment-*.log
-      pos_file /var/log/app-deployment.log.pos
+      path /var/log/containers/app-server-*.log
+      pos_file /var/log/app-server.log.pos
       tag app.access
       <parse>
         @type json
@@ -22,6 +22,9 @@ data:
       <server>
         name app.agent
         host host.docker.internal
-        port 12112
+        port 24224
+        <buffer>
+          flush_mode immediate
+        </buffer>
       </server>
     </match>

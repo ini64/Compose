@@ -1,13 +1,19 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: app-service
+  name: app
 spec:
   selector:
     app: app
   ports:
-    - protocol: TCP
+    - name: server
+      protocol: TCP
       port: 15500
       targetPort: 15500
       nodePort: 30002
+    - name: tool
+      protocol: TCP
+      port: 5050
+      targetPort: 5050
+      nodePort: 30003
   type: LoadBalancer

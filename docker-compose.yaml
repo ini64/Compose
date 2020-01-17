@@ -1,6 +1,23 @@
 version: '3.3'
 services:
-
+  gitlab:
+    image: 'gitlab/gitlab-ce:11.7.5-ce.0'
+    restart: always
+    hostname: 'gitlab.dev'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://gitlab.dev'
+        prometheus_monitoring['enable'] = false
+    ports:
+      - '80:80'
+      - '443:443'
+      - '22:22'
+    volumes:
+      - '/home/gitlab/config:/etc/gitlab'
+      - '/home/gitlab/log:/var/log/gitlab'
+      - '/home/gitlab/data:/var/opt/gitlab'
+      - '/home/gitlab/backups:/var/opt/gitlab/backups'
+      
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.4.2
     container_name: elasticsearch
@@ -13,7 +30,7 @@ services:
         soft: -1
         hard: -1
     volumes:
-    - .\ElasticSearch\data:/usr/share/elasticsearch/data
+    - /mnt/c/docker/ElasticSearch/data:/usr/share/elasticsearch/data
     ports:
     - "9200:9200"
     expose:
@@ -33,8 +50,18 @@ services:
     ports:
     - 5000:5000
     volumes:
-    - .\DockerRegistry\config.yml:/etc/docker/registry/config.yml
-    - .\DockerRegistry\data:/var/lib/registry
+    - /mnt/c/docker/DockerRegistry/config.yml:/etc/docker/registry/config.yml
+    - /mnt/c/docker/DockerRegistry/data:/var/lib/registry
+
+  redis:
+    image: 'redis:5.0.7'
+    environment:
+      ALLOW_EMPTY_PASSWORD: "yes"
+    ports:
+    - 6379:6379
+    volumes:
+    - /mnt/c/docker/Redis/Log:/data
+    - /mnt/c/docker/Redis/redis.conf:/usr/local/etc/redis/redis.conf
     
   mysql5.7:
     image: mysql:5.7.28
@@ -45,28 +72,7 @@ services:
     ports:
     - 3306:3306
     volumes:
-    - .\Mysql5.7\Data:/var/lib/mysql
-    - .\Mysql5.7\:/etc/mysql/
-    
-  mysql8.x:
-    image: mysql:8.0.18
-    command: --default-authentication-plugin=mysql_native_password
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: coral
-    ports:
-    - 3307:3306
-    volumes:
-    - .\Mysql8.x\Data:/var/lib/mysql
-    - .\Mysql8.x\:/etc/mysql/
+    - /home/Mysql5.7/Data:/var/lib/mysql
+    - /home/Mysql5.7/:/etc/mysql/
 
-  redis:
-    image: 'redis:5.0.7'
-    environment:
-      ALLOW_EMPTY_PASSWORD: "yes"
-    ports:
-    - 6379:6379
-    volumes:
-    - .\Redis\Data:/data
-    - .\Redis\redis.conf:/usr/local/etc/redis/redis.conf
-    
+
